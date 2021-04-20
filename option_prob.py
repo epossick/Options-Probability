@@ -10,7 +10,7 @@ csv=input('Enter csv path: ')
 #skiprows= skips first 13 rows of file
 #usecols= uses columns with given names
 #skipfooter= skips last 24 rows of file
-myfile=pd.read_csv(csv,skiprows=13,usecols=['BID','ASK','Exp','Strike','BID.1','ASK.1'],skipfooter=22)
+myfile=pd.read_csv(csv,skiprows=13,usecols=['BID','ASK','Exp','Strike','BID.1','ASK.1'])
 myfile2=pd.read_csv(csv,skiprows=5,usecols=['LAST'],skipfooter=len(myfile)-7)
 #create a dataframe object
 df=pd.DataFrame(myfile)
@@ -30,13 +30,18 @@ def put_mid():
         midpoint=((put_bid[i]+put_ask[i])/2)
         midpoints.append(midpoint)
     return midpoints 
+a=put_mid()
+
 def call_mid():
     midpoints=[]
     for i in range(len(myfile)):
         midpoint=(call_bid[i]+call_ask[i])/2
         midpoints.append(midpoint)
     return midpoints
-a=put_mid()
+#takes out the nan values from csv (values after last strike)
+old_list=call_mid()
+b=[x for x in old_list if pd.isnull(x)==False]
+b.append(0)
 """Obtain butterfly spreads"""
 def put_butterfly():
     butterflies=[]
@@ -47,16 +52,19 @@ def put_butterfly():
             butterfly=np.round(a[i]-2*a[i+1]+a[i+2],3)
             butterflies.append(butterfly)
     return butterflies
-b=call_mid()
+c=put_butterfly()
+
 def call_butterfly():
     butterflies=[]
-    for i in range(-1*len(call_mid()),-2):
+    for i in range(-1*len(call_mid()),-1):
         if float(strike_prices[i])<float(underlying[0]):
             continue
         else:
             butterfly=np.round(b[i-1]-2*b[i]+b[i+1],3)
             butterflies.append(butterfly)
     return butterflies
+d=call_butterfly()
+
 """Get deltas"""
 def put_deltas():
     deltas=[]
@@ -67,6 +75,8 @@ def put_deltas():
             delta=float(strike_prices[i]-strike_prices[i-1])
             deltas.append(delta)
     return deltas
+e=put_deltas()
+
 def call_deltas():
     deltas=[]
     for i in range(-1*len(strike_prices),-1):
@@ -76,11 +86,8 @@ def call_deltas():
             delta=float(strike_prices[i]-strike_prices[i-1])
             deltas.append(delta)
     return deltas
-"""Get option implied probabilities"""
-c=put_butterfly()
-d=call_butterfly()
-e=put_deltas()
 f=call_deltas()
+"""Get option implied probabilities"""
 def implied_probability():
     distribution=[]
     for i in range(len(c)):
@@ -93,7 +100,7 @@ def implied_probability():
 """Plot the points as a distribution"""
 #initialize x and y values
 prob=implied_probability()
-strikes=strike_prices[-1*len(strike_prices):-3]
+strikes=strike_prices[-1*len(strike_prices):-2]
 x=strikes
 
 #plot distribution
