@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import mplcursors 
 
-csv='/Users/evanpossick/Desktop/option_csv/PTON (2).csv'
+csv=input("Enter csv path: ")
 
 """Read csv file and remove unwanted columns"""
 myfile=pd.read_csv(csv,usecols=['Date','Close'])
