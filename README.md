@@ -5,4 +5,5 @@ ChangeSD plots the daily price fluctuations over the past year in standard devia
 
 
 Important notes
-For some of the securities with larger amount of strikes (ex.TSLA), you might need to increase the width of each bar in the OptionsProb chart. Sometimes their are too many strikes so some of the bars are not visible. You can find the chart in the main() function under #plot OptionsProb. I have only ever needed 0.2 or 0.5 for my width, but its still something to consider
+For some of the securities with larger amount of strikes (ex.TSLA), you might need to increase the width of each bar in the OptionsProb chart. Sometimes their are too many strikes so some of the bars are not visible. You can find the chart in the main() function under #plot OptionsProb. I have only ever needed 0.2 or 0.5 for my width, but its still something to consider.
+This also requires you to install a few modules, if you do not know how just google it.
